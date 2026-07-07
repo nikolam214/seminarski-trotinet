@@ -9,7 +9,8 @@ import java.util.List;
 import operacije.ApstraktnaGenerickaOperacija;
 
 /**
- *
+ *Sistemska operacija za ucitavanje svih objekata klase veze zaposleni-termin dezurstva (ZtD) iz baze podataka.
+ * 
  * @author nikola
  */
 public class UcitajZtDSO extends ApstraktnaGenerickaOperacija {
@@ -17,11 +18,23 @@ public class UcitajZtDSO extends ApstraktnaGenerickaOperacija {
     List<ZtD> ztdList;
     
     
-
+    /**
+     * Proverava preduslove za izvrsavanje operacije.
+     *
+     * @param objekat Objekat nad kojim se operacija izvrsava
+     * @throws Exception ako objekat nije odgovarajuce klase ili ne ispunjava uslove operacije
+     */
     @Override
     protected void preduslovi(Object objekat) throws Exception {
     }
 
+    /**
+     * Izvrsava konkretnu operaciju nad prosledjenim objektom.
+     *
+     * @param objekat Objekat nad kojim se operacija izvrsava
+     * @param kljuc Dodatni kriterijum operacije
+     * @throws Exception ako dodje do greske pri radu sa bazom podataka
+     */
     @Override
     protected void izvsiOperaciju(Object objekat, String kljuc) throws Exception {
         ztdList = (List<ZtD>) (List<?>) broker.getAll(new ZtD(),

@@ -11,10 +11,18 @@ import repository.db.impl.DbRepositoryGeneric;
 
 /**
  *
+ * Sistemska operacija za kreiranje novog iznajmljivanja u bazi podataka.
+ * 
  * @author nikola
  */
 public class KreirajIznajmljivanjeSO extends ApstraktnaGenerickaOperacija {
 
+    /**
+     * Proverava preduslove za izvrsavanje operacije.
+     *
+     * @param objekat Objekat nad kojim se operacija izvrsava
+     * @throws Exception ako objekat nije odgovarajuce klase ili ne ispunjava uslove operacije
+     */
     @Override
     protected void preduslovi(Object objekat) throws Exception {
         
@@ -33,6 +41,13 @@ public class KreirajIznajmljivanjeSO extends ApstraktnaGenerickaOperacija {
         }
     }
 
+    /**
+     * Izvrsava konkretnu operaciju nad prosledjenim objektom.
+     *
+     * @param objekat Objekat nad kojim se operacija izvrsava
+     * @param kljuc Dodatni kriterijum operacije
+     * @throws Exception ako dodje do greske pri radu sa bazom podataka
+     */
     @Override
     protected void izvsiOperaciju(Object objekat, String kljuc) throws Exception {
         Iznajmljivanje i = (Iznajmljivanje) objekat;
@@ -48,6 +63,5 @@ public class KreirajIznajmljivanjeSO extends ApstraktnaGenerickaOperacija {
             broker.add(stavka);
         }
     }
-    
     
 }

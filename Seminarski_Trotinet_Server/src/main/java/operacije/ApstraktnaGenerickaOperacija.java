@@ -11,6 +11,9 @@ import repository.db.impl.DbRepositoryGeneric;
 
 /**
  *
+ * 
+ * Predstavlja apstraktnu sistemsku operaciju koja definise opsti tok izvrsavanja: provera preduslova,
+ * zapocinjanje transakcije, izvrsavanje konkretne operacije i potvrda ili ponistavanje transakcije.
  * @author nikola
  */
 public abstract class ApstraktnaGenerickaOperacija {
