@@ -2,3 +2,6 @@ build/
 dist/
 nbproject/private/
 .DS_Store
+/Seminarski_Trotinet_Klijent/nbproject/
+/Seminarski_Trotinet_Server/nbproject/
+/Seminarski_trotinet_Zajednicki/nbproject/
