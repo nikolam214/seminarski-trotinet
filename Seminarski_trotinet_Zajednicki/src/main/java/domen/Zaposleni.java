@@ -25,11 +25,11 @@ public class Zaposleni implements ApstraktniDomenskiObjekat{
     }
 
     public Zaposleni(int id, String korisnickoIme, String sifra, String ime, String prezime) {
-        this.id = id;
-        this.korisnickoIme = korisnickoIme;
-        this.sifra = sifra;
-        this.ime = ime;
-        this.prezime = prezime;
+        setId(id);
+        setKorisnickoIme(korisnickoIme);
+        setSifra(sifra);
+        setIme(ime);
+        setPrezime(prezime);
     }
 
     public int getId() {
@@ -37,6 +37,9 @@ public class Zaposleni implements ApstraktniDomenskiObjekat{
     }
 
     public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Id mora biti veci od nule");
+        }
         this.id = id;
     }
 
@@ -45,6 +48,9 @@ public class Zaposleni implements ApstraktniDomenskiObjekat{
     }
 
     public void setKorisnickoIme(String korisnickoIme) {
+        if (korisnickoIme == null || korisnickoIme.isEmpty()) {
+            throw new IllegalArgumentException("Korisnicko ime ne sme biti null ili prazno");
+        }
         this.korisnickoIme = korisnickoIme;
     }
 
@@ -53,6 +59,9 @@ public class Zaposleni implements ApstraktniDomenskiObjekat{
     }
 
     public void setSifra(String sifra) {
+        if (sifra == null || sifra.isEmpty()) {
+            throw new IllegalArgumentException("Sifra ne sme biti null ili prazna");
+        }
         this.sifra = sifra;
     }
 
@@ -61,6 +70,9 @@ public class Zaposleni implements ApstraktniDomenskiObjekat{
     }
 
     public void setIme(String ime) {
+        if (ime == null || ime.isEmpty()) {
+            throw new IllegalArgumentException("Ime ne sme biti null ili prazno");
+        }
         this.ime = ime;
     }
 
@@ -69,13 +81,15 @@ public class Zaposleni implements ApstraktniDomenskiObjekat{
     }
 
     public void setPrezime(String prezime) {
+        if (prezime == null || prezime.isEmpty()) {
+            throw new IllegalArgumentException("Prezime ne sme biti null ili prazno");
+        }
         this.prezime = prezime;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        return hash;
+        return Objects.hash(korisnickoIme, sifra);
     }
 
     @Override

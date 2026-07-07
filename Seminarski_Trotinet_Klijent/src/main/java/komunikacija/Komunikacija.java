@@ -49,14 +49,17 @@ public class Komunikacija {
     }
 
     public Zaposleni login(String ki, String pass) {
-        Zaposleni z= new Zaposleni(0, ki, pass, null, null);
-        Zahtev zahtev= new Zahtev(Operacija.LOGIN, z);
+        Zaposleni z = new Zaposleni();
+        
+        z.setKorisnickoIme(ki);
+        z.setSifra(pass);
+        
+        Zahtev zahtev = new Zahtev(Operacija.LOGIN, z);
         posiljalac.posalji(zahtev);
-        
-        Odgovor odg= (Odgovor) primalac.primi();
-        z=(Zaposleni) odg.getOdgovor();
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        z = (Zaposleni) odg.getOdgovor();
         return z;
-        
     }
 
     public List<Klijent> ucitajKlijente() {

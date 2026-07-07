@@ -25,11 +25,11 @@ public class Klijent implements ApstraktniDomenskiObjekat {
     }
 
     public Klijent(int id, String ime, String prezime, long brojtelefona, Mesto mesto) {
-        this.id = id;
-        this.ime = ime;
-        this.prezime = prezime;
-        this.brojTelefona = brojtelefona;
-        this.mesto = mesto;
+        setId(id);
+        setIme(ime);
+        setPrezime(prezime);
+        setBrojtelefona(brojtelefona);
+        setMesto(mesto);
     }
 
     public int getId() {
@@ -37,6 +37,9 @@ public class Klijent implements ApstraktniDomenskiObjekat {
     }
 
     public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Id mora biti veci od nule");
+        }
         this.id = id;
     }
 
@@ -45,6 +48,9 @@ public class Klijent implements ApstraktniDomenskiObjekat {
     }
 
     public void setIme(String ime) {
+        if (ime == null || ime.isEmpty()) {
+            throw new IllegalArgumentException("Ime ne sme biti null ili prazno");
+        }
         this.ime = ime;
     }
 
@@ -53,6 +59,9 @@ public class Klijent implements ApstraktniDomenskiObjekat {
     }
 
     public void setPrezime(String prezime) {
+        if (prezime == null || prezime.isEmpty()) {
+            throw new IllegalArgumentException("Prezime ne sme biti null ili prazno");
+        }
         this.prezime = prezime;
     }
 
@@ -61,6 +70,9 @@ public class Klijent implements ApstraktniDomenskiObjekat {
     }
 
     public void setBrojtelefona(long brojtelefona) {
+        if (brojtelefona <= 0) {
+            throw new IllegalArgumentException("Broj telefona mora biti veci od nule");
+        }
         this.brojTelefona = brojtelefona;
     }
 
@@ -69,6 +81,9 @@ public class Klijent implements ApstraktniDomenskiObjekat {
     }
 
     public void setMesto(Mesto mesto) {
+        if (mesto == null) {
+            throw new IllegalArgumentException("Mesto ne sme biti null");
+        }
         this.mesto = mesto;
     }
 
@@ -79,8 +94,7 @@ public class Klijent implements ApstraktniDomenskiObjekat {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return Objects.hash(id, ime, prezime);
     }
 
     @Override

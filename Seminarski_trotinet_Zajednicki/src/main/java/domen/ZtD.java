@@ -26,10 +26,10 @@ public class ZtD implements ApstraktniDomenskiObjekat{
     }
 
     public ZtD(Zaposleni zaposleni, TerminDezurstva terminDezurstva, Date datum, String napomena) {
-        this.zaposleni = zaposleni;
-        this.terminDezurstva = terminDezurstva;
-        this.datum = datum;
-        this.napomena = napomena;
+        setZaposleni(zaposleni);
+        setTerminDezurstva(terminDezurstva);
+        setDatum(datum);
+        setNapomena(napomena);
     }
 
     public Zaposleni getZaposleni() {
@@ -37,6 +37,9 @@ public class ZtD implements ApstraktniDomenskiObjekat{
     }
 
     public void setZaposleni(Zaposleni zaposleni) {
+        if (zaposleni == null) {
+            throw new IllegalArgumentException("Zaposleni ne sme biti null");
+        }
         this.zaposleni = zaposleni;
     }
 
@@ -45,6 +48,9 @@ public class ZtD implements ApstraktniDomenskiObjekat{
     }
 
     public void setTerminDezurstva(TerminDezurstva terminDezurstva) {
+        if (terminDezurstva == null) {
+            throw new IllegalArgumentException("Termin dezurstva ne sme biti null");
+        }
         this.terminDezurstva = terminDezurstva;
     }
 
@@ -53,6 +59,9 @@ public class ZtD implements ApstraktniDomenskiObjekat{
     }
 
     public void setDatum(Date datum) {
+        if (datum == null) {
+            throw new IllegalArgumentException("Datum ne sme biti null");
+        }
         this.datum = datum;
     }
 
@@ -61,6 +70,9 @@ public class ZtD implements ApstraktniDomenskiObjekat{
     }
 
     public void setNapomena(String napomena) {
+        if (napomena == null || napomena.isEmpty()) {
+            throw new IllegalArgumentException("Napomena ne sme biti null ili prazna");
+        }
         this.napomena = napomena;
     }
 
@@ -71,8 +83,7 @@ public class ZtD implements ApstraktniDomenskiObjekat{
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        return hash;
+        return Objects.hash(zaposleni, terminDezurstva, datum);
     }
 
     @Override
@@ -104,27 +115,34 @@ public class ZtD implements ApstraktniDomenskiObjekat{
     @Override
     public List<ApstraktniDomenskiObjekat> vratiListu(ResultSet rs) throws Exception {
         List<ApstraktniDomenskiObjekat> lista = new ArrayList<>();
-    while (rs.next()) {
-        int idZaposleni = rs.getInt("zaposleni.id");
-        String korIme = rs.getString("zaposleni.korisnickoIme");
-        String sifra = rs.getString("zaposleni.sifra");
-        String imeZ = rs.getString("zaposleni.ime");
-        String prezimeZ = rs.getString("zaposleni.prezime");
-        Zaposleni zaposleni = new Zaposleni(idZaposleni, korIme, sifra, imeZ, prezimeZ);
+        while (rs.next()) {
+            int idZaposleni = rs.getInt("zaposleni.id");
+            String korIme = rs.getString("zaposleni.korisnickoIme");
+            String sifra = rs.getString("zaposleni.sifra");
+            String imeZ = rs.getString("zaposleni.ime");
+            String prezimeZ = rs.getString("zaposleni.prezime");
+            Zaposleni zaposleni = new Zaposleni(idZaposleni, korIme, sifra, imeZ, prezimeZ);
 
-        int idTermin = rs.getInt("terminDezurstva.id");
-        String tipSmene = rs.getString("terminDezurstva.tipSmene");
-        java.util.Date vremePocetka = rs.getTimestamp("terminDezurstva.vremePocetka");
-        int trajanje = rs.getInt("terminDezurstva.trajanje");
-        TerminDezurstva termin = new TerminDezurstva(idTermin, tipSmene, vremePocetka, trajanje);
+            int idTermin = rs.getInt("terminDezurstva.id");
+            String tipSmene = rs.getString("terminDezurstva.tipSmene");
+            java.util.Date vremePocetka = rs.getTimestamp("terminDezurstva.vremePocetka");
+            int trajanje = rs.getInt("terminDezurstva.trajanje");
+            TerminDezurstva termin = new TerminDezurstva(idTermin, tipSmene, vremePocetka, trajanje);
 
-        java.util.Date datum = rs.getDate("ztd.datum");
-        String napomena = rs.getString("ztd.napomena");
 
-        ZtD ztd = new ZtD(zaposleni, termin, datum, napomena);
-        lista.add(ztd);
-    }
-    return lista;
+            java.util.Date datum = rs.getDate("ztd.datum");
+            String napomena = rs.getString("ztd.napomena");
+
+            ZtD ztd = new ZtD();
+            ztd.setZaposleni(zaposleni);
+            ztd.setTerminDezurstva(termin);
+            ztd.setDatum(datum);
+            if (napomena != null && !napomena.isEmpty()) {
+                ztd.setNapomena(napomena);
+            }
+            lista.add(ztd);
+        }
+        return lista;
     }
 
     @Override

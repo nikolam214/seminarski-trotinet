@@ -26,10 +26,10 @@ public class Iznajmljivanje implements ApstraktniDomenskiObjekat{
     }
 
     public Iznajmljivanje(int id, double ukupnaCena, Zaposleni zaposleni, Klijent klijent) {
-        this.id = id;
-        this.ukupnaCena = ukupnaCena;
-        this.zaposleni = zaposleni;
-        this.klijent = klijent;
+        setId(id);
+        setUkupnaCena(ukupnaCena);
+        setZaposleni(zaposleni);
+        setKlijent(klijent);
         this.stavkeIznajmljivanja = new ArrayList<>();
     }
 
@@ -40,6 +40,9 @@ public class Iznajmljivanje implements ApstraktniDomenskiObjekat{
     }
 
     public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Id mora biti veci od nule");
+        }
         this.id = id;
     }
 
@@ -48,6 +51,9 @@ public class Iznajmljivanje implements ApstraktniDomenskiObjekat{
     }
 
     public void setUkupnaCena(double ukupnaCena) {
+        if (ukupnaCena < 0) {
+            throw new IllegalArgumentException("Ukupna cena ne sme biti negativna");
+        }
         this.ukupnaCena = ukupnaCena;
     }
 
@@ -56,6 +62,9 @@ public class Iznajmljivanje implements ApstraktniDomenskiObjekat{
     }
 
     public void setZaposleni(Zaposleni zaposleni) {
+        if (zaposleni == null) {
+            throw new IllegalArgumentException("Zaposleni ne sme biti null");
+        }
         this.zaposleni = zaposleni;
     }
 
@@ -64,6 +73,9 @@ public class Iznajmljivanje implements ApstraktniDomenskiObjekat{
     }
 
     public void setKlijent(Klijent klijent) {
+        if (klijent == null) {
+            throw new IllegalArgumentException("Klijent ne sme biti null");
+        }
         this.klijent = klijent;
     }
 
@@ -72,27 +84,29 @@ public class Iznajmljivanje implements ApstraktniDomenskiObjekat{
     }
 
     public void setStavkeIznajmljivanja(List<StavkaIznajmljivanja> stavkeIznajmljivanja) {
+        if (stavkeIznajmljivanja == null) {
+            throw new IllegalArgumentException("Lista stavki ne sme biti null");
+        }
         this.stavkeIznajmljivanja = stavkeIznajmljivanja;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        return hash;
+        return Objects.hash(id);
     }
 
    @Override
-public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
-    final Iznajmljivanje other = (Iznajmljivanje) obj;
-    return this.id == other.id;
-}
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Iznajmljivanje other = (Iznajmljivanje) obj;
+        return this.id == other.id;
+    }
 
 
     @Override
     public String toString() {
-        return "Iznajmljivanje{" + "ukupnaCena=" + ukupnaCena + ", zaposleni=" + zaposleni + ", klijent=" + klijent + '}';
+        return "Iznajmljivanje{" + "id=" + id + ", ukupnaCena=" + ukupnaCena + ", zaposleni=" + zaposleni + ", klijent=" + klijent + '}';
     }
 
     @Override
@@ -103,28 +117,30 @@ public boolean equals(Object obj) {
     @Override
     public List<ApstraktniDomenskiObjekat> vratiListu(ResultSet rs) throws Exception {
         List<ApstraktniDomenskiObjekat> lista = new ArrayList<>();
-    while (rs.next()) {
-        
-        int idZaposleni = rs.getInt("zaposleni.id");
-        String korIme = rs.getString("zaposleni.korisnickoIme");
-        String sifra = rs.getString("zaposleni.sifra");
-        String imeZ = rs.getString("zaposleni.ime");
-        String prezimeZ = rs.getString("zaposleni.prezime");
-        Zaposleni zaposleni = new Zaposleni(idZaposleni, korIme, sifra, imeZ, prezimeZ);
+        while (rs.next()) {
+            int idZaposleni = rs.getInt("zaposleni.id");
+            String korIme = rs.getString("zaposleni.korisnickoIme");
+            String sifra = rs.getString("zaposleni.sifra");
+            String imeZ = rs.getString("zaposleni.ime");
+            String prezimeZ = rs.getString("zaposleni.prezime");
+            Zaposleni zaposleni = new Zaposleni(idZaposleni, korIme, sifra, imeZ, prezimeZ);
 
-        int idKlijent = rs.getInt("klijent.id");
-        String imeK = rs.getString("klijent.ime");
-        String prezimeK = rs.getString("klijent.prezime");
-        long telK = rs.getLong("klijent.brojTelefona");
-        Klijent klijent = new Klijent(idKlijent, imeK, prezimeK, telK, null);
+            int idKlijent = rs.getInt("klijent.id");
+            String imeK = rs.getString("klijent.ime");
+            String prezimeK = rs.getString("klijent.prezime");
+            long telK = rs.getLong("klijent.brojTelefona");
+            Klijent klijent = new Klijent();
+            klijent.setId(idKlijent);
+            klijent.setIme(imeK);
+            klijent.setPrezime(prezimeK);
+            klijent.setBrojtelefona(telK);
 
-        int id = rs.getInt("iznajmljivanje.id");
-        double ukupnaCena = rs.getDouble("iznajmljivanje.ukupnaCena");
-
-        Iznajmljivanje iznajmljivanje = new Iznajmljivanje(id, ukupnaCena, zaposleni, klijent);
-        lista.add(iznajmljivanje);
-    }
-    return lista;
+            int id = rs.getInt("iznajmljivanje.id");
+            double ukupnaCena = rs.getDouble("iznajmljivanje.ukupnaCena");
+            Iznajmljivanje iznajmljivanje = new Iznajmljivanje(id, ukupnaCena, zaposleni, klijent);
+            lista.add(iznajmljivanje);
+        }
+        return lista;
     }
 
     @Override

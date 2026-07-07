@@ -22,9 +22,9 @@ public class Mesto implements ApstraktniDomenskiObjekat{
     }
 
     public Mesto(int id, String Naziv, int postanskiBroj) {
-        this.id = id;
-        this.naziv = Naziv;
-        this.postanskiBroj = postanskiBroj;
+        setId(id);
+        setNaziv(Naziv);
+        setPostanskiBroj(postanskiBroj);
     }
 
     public int getId() {
@@ -32,6 +32,9 @@ public class Mesto implements ApstraktniDomenskiObjekat{
     }
 
     public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Id mora biti veci od nule");
+        }
         this.id = id;
     }
 
@@ -40,6 +43,9 @@ public class Mesto implements ApstraktniDomenskiObjekat{
     }
 
     public void setNaziv(String Naziv) {
+        if (Naziv == null || Naziv.isEmpty()) {
+            throw new IllegalArgumentException("Naziv ne sme biti null ili prazan");
+        }
         this.naziv = Naziv;
     }
 
@@ -48,6 +54,9 @@ public class Mesto implements ApstraktniDomenskiObjekat{
     }
 
     public void setPostanskiBroj(int postanskiBroj) {
+        if (postanskiBroj <= 0) {
+            throw new IllegalArgumentException("Postanski broj mora biti veci od nule");
+        }
         this.postanskiBroj = postanskiBroj;
     }
 
@@ -58,8 +67,7 @@ public class Mesto implements ApstraktniDomenskiObjekat{
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        return hash;
+        return Objects.hash(naziv, postanskiBroj);
     }
 
     @Override

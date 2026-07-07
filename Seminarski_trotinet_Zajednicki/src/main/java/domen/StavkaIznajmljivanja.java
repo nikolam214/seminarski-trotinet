@@ -29,13 +29,13 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public StavkaIznajmljivanja(int rb, Iznajmljivanje iznajmljivanje, Date vremeuzimanja, Date vremeVracanja, double cenaPoMinutu, double iznos, Trotinet trotinet) {
-        this.rb = rb;
-        this.iznajmljivanje = iznajmljivanje;
-        this.vremeUzimanja = vremeuzimanja;
-        this.vremeVracanja = vremeVracanja;
-        this.cenaPoMinutu = cenaPoMinutu;
-        this.iznos = iznos;
-        this.trotinet = trotinet;
+        setRb(rb);
+        setIznajmljivanje(iznajmljivanje);
+        setVremeuzimanja(vremeuzimanja);
+        setVremeVracanja(vremeVracanja);
+        setCenaPoMinutu(cenaPoMinutu);
+        setIznos(iznos);
+        setTrotinet(trotinet);
     }
 
     public int getRb() {
@@ -43,6 +43,9 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public void setRb(int rb) {
+        if (rb <= 0) {
+            throw new IllegalArgumentException("Redni broj mora biti veci od nule");
+        }
         this.rb = rb;
     }
 
@@ -51,6 +54,9 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public void setIznajmljivanje(Iznajmljivanje iznajmljivanje) {
+        if (iznajmljivanje == null) {
+            throw new IllegalArgumentException("Iznajmljivanje ne sme biti null");
+        }
         this.iznajmljivanje = iznajmljivanje;
     }
 
@@ -59,6 +65,9 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public void setVremeuzimanja(Date vremeuzimanja) {
+        if (vremeuzimanja == null) {
+            throw new IllegalArgumentException("Vreme uzimanja ne sme biti null");
+        }
         this.vremeUzimanja = vremeuzimanja;
     }
 
@@ -67,6 +76,12 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public void setVremeVracanja(Date vremeVracanja) {
+        if (vremeVracanja == null) {
+            throw new IllegalArgumentException("Vreme vracanja ne sme biti null");
+        }
+        if (vremeUzimanja != null && vremeVracanja.before(vremeUzimanja)) {
+            throw new IllegalArgumentException("Vreme vracanja ne sme biti pre vremena uzimanja");
+        }
         this.vremeVracanja = vremeVracanja;
     }
 
@@ -75,6 +90,9 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public void setCenaPoMinutu(double cenaPoMinutu) {
+        if (cenaPoMinutu <= 0) {
+            throw new IllegalArgumentException("Cena po minutu mora biti veca od nule");
+        }
         this.cenaPoMinutu = cenaPoMinutu;
     }
 
@@ -83,6 +101,9 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public void setIznos(double iznos) {
+        if (iznos < 0) {
+            throw new IllegalArgumentException("Iznos ne sme biti negativan");
+        }
         this.iznos = iznos;
     }
 
@@ -91,6 +112,9 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
     }
 
     public void setTrotinet(Trotinet trotinet) {
+        if (trotinet == null) {
+            throw new IllegalArgumentException("Trotinet ne sme biti null");
+        }
         this.trotinet = trotinet;
     }
 
@@ -101,8 +125,7 @@ public class StavkaIznajmljivanja implements ApstraktniDomenskiObjekat{
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        return hash;
+        return Objects.hash(rb, iznajmljivanje);
     }
 
     @Override
@@ -122,26 +145,35 @@ public boolean equals(Object obj) {
     @Override
     public List<ApstraktniDomenskiObjekat> vratiListu(ResultSet rs) throws Exception {
         List<ApstraktniDomenskiObjekat> lista = new ArrayList<>();
-    while (rs.next()) {
-        int idIznajmljivanje = rs.getInt("stavkaIznajmljivanja.iznajmljivanje");
-        Iznajmljivanje iznajmljivanje = new Iznajmljivanje();
-        iznajmljivanje.setId(idIznajmljivanje);
+        while (rs.next()) {
+            int idIznajmljivanje = rs.getInt("stavkaIznajmljivanja.iznajmljivanje");
+            Iznajmljivanje iznajmljivanje = new Iznajmljivanje();
+            iznajmljivanje.setId(idIznajmljivanje);
 
-        int idTrotinet = rs.getInt("trotinet.id");
-        String model = rs.getString("trotinet.modelTrotineta");
-        double cenaMin = rs.getDouble("trotinet.cenaPoMinutu");
-        Trotinet trotinet = new Trotinet(idTrotinet, model, cenaMin);
+            int idTrotinet = rs.getInt("trotinet.id");
+            String model = rs.getString("trotinet.modelTrotineta");
+            double cenaMin = rs.getDouble("trotinet.cenaPoMinutu");
+            Trotinet trotinet = new Trotinet(idTrotinet, model, cenaMin);
 
-        int rb = rs.getInt("stavkaIznajmljivanja.rb");
-        java.util.Date uzet = rs.getTimestamp("stavkaIznajmljivanja.vremeUzimanja");
-        java.util.Date vracen = rs.getTimestamp("stavkaIznajmljivanja.vremeVracanja");
-        double cenaPoMinutu = rs.getDouble("stavkaIznajmljivanja.cenaPoMinutu");
-        double iznos = rs.getDouble("stavkaIznajmljivanja.iznos");
+            int rb = rs.getInt("stavkaIznajmljivanja.rb");
+            java.util.Date uzet = rs.getTimestamp("stavkaIznajmljivanja.vremeUzimanja");
+            java.util.Date vracen = rs.getTimestamp("stavkaIznajmljivanja.vremeVracanja");
+            double cenaPoMinutu = rs.getDouble("stavkaIznajmljivanja.cenaPoMinutu");
+            double iznos = rs.getDouble("stavkaIznajmljivanja.iznos");
 
-        StavkaIznajmljivanja stavka = new StavkaIznajmljivanja(rb, iznajmljivanje, uzet, vracen, cenaPoMinutu, iznos, trotinet);
-        lista.add(stavka);
-    }
-    return lista;
+            StavkaIznajmljivanja stavka = new StavkaIznajmljivanja();
+            stavka.setRb(rb);
+            stavka.setIznajmljivanje(iznajmljivanje);
+            stavka.setVremeuzimanja(uzet);
+            if (vracen != null) {
+                stavka.setVremeVracanja(vracen);
+            }
+            stavka.setCenaPoMinutu(cenaPoMinutu);
+            stavka.setIznos(iznos);
+            stavka.setTrotinet(trotinet);
+            lista.add(stavka);
+        }
+        return lista;
     }
 
     @Override

@@ -29,10 +29,10 @@ public class TerminDezurstva implements ApstraktniDomenskiObjekat{
     }
 
     public TerminDezurstva(int id, String tipSmene, Date vremePocetka, int trajanje) {
-        this.id = id;
-        this.tipSmene = tipSmene;
-        this.vremePocetka = vremePocetka;
-        this.trajanje = trajanje;
+        setId(id);
+        setTipSmene(tipSmene);
+        setVremePocetka(vremePocetka);
+        setTrajanje(trajanje);
     }
 
     public int getId() {
@@ -40,6 +40,9 @@ public class TerminDezurstva implements ApstraktniDomenskiObjekat{
     }
 
     public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Id mora biti veci od nule");
+        }
         this.id = id;
     }
 
@@ -48,6 +51,9 @@ public class TerminDezurstva implements ApstraktniDomenskiObjekat{
     }
 
     public void setTipSmene(String tipSmene) {
+        if (tipSmene == null || tipSmene.isEmpty()) {
+            throw new IllegalArgumentException("Tip smene ne sme biti null ili prazan");
+        }
         this.tipSmene = tipSmene;
     }
 
@@ -56,6 +62,9 @@ public class TerminDezurstva implements ApstraktniDomenskiObjekat{
     }
 
     public void setVremePocetka(Date vremePocetka) {
+        if (vremePocetka == null) {
+            throw new IllegalArgumentException("Vreme pocetka ne sme biti null");
+        }
         this.vremePocetka = vremePocetka;
     }
 
@@ -64,13 +73,15 @@ public class TerminDezurstva implements ApstraktniDomenskiObjekat{
     }
 
     public void setTrajanje(int trajanje) {
+        if (trajanje <= 0) {
+            throw new IllegalArgumentException("Trajanje mora biti vece od nule");
+        }
         this.trajanje = trajanje;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        return hash;
+        return Objects.hash(id);
     }
 
    @Override

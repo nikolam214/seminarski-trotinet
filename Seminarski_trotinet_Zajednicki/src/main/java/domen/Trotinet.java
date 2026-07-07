@@ -24,9 +24,9 @@ public class Trotinet implements ApstraktniDomenskiObjekat{
     }
 
     public Trotinet(int id, String modelTrotineta, double cenaPoMinutu) {
-        this.id = id;
-        this.modelTrotineta = modelTrotineta;
-        this.cenaPoMinutu = cenaPoMinutu;
+        setId(id);
+        setModelTrotineta(modelTrotineta);
+        setCenaPoMinutu(cenaPoMinutu);
     }
 
     public double getCenaPoMinutu() {
@@ -34,6 +34,9 @@ public class Trotinet implements ApstraktniDomenskiObjekat{
     }
 
     public void setCenaPoMinutu(double cenaPoMinutu) {
+        if (cenaPoMinutu <= 0) {
+            throw new IllegalArgumentException("Cena po minutu mora biti veca od nule");
+        }
         this.cenaPoMinutu = cenaPoMinutu;
     }
 
@@ -46,6 +49,9 @@ public class Trotinet implements ApstraktniDomenskiObjekat{
     }
 
     public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Id mora biti veci od nule");
+        }
         this.id = id;
     }
 
@@ -54,6 +60,9 @@ public class Trotinet implements ApstraktniDomenskiObjekat{
     }
 
     public void setModelTrotineta(String modelTrotineta) {
+        if (modelTrotineta == null || modelTrotineta.isEmpty()) {
+            throw new IllegalArgumentException("Model trotineta ne sme biti null ili prazan");
+        }
         this.modelTrotineta = modelTrotineta;
     }
 
@@ -68,8 +77,7 @@ public class Trotinet implements ApstraktniDomenskiObjekat{
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        return hash;
+        return Objects.hash(id, modelTrotineta);
     }
 
     @Override

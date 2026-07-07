@@ -22,7 +22,8 @@ public class Konfiguracija {
     public Konfiguracija() {
         konfiguracija= new Properties();
         try {
-            konfiguracija.load(new FileInputStream("/Users/nikola/NetBeansProjects/Seminarski_Trotinet_Server/config/config.properties"));
+            konfiguracija.load(new FileInputStream("config/config.properties"));
+
         } catch (FileNotFoundException ex) {
             System.getLogger(Konfiguracija.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
@@ -52,7 +53,7 @@ public class Konfiguracija {
     public void sacuvajIzmene(){
         
         try {
-            konfiguracija.store(new FileOutputStream("/Users/nikola/NetBeansProjects/Seminarski_Trotinet_Server/config/config.properties"), null);
+            konfiguracija.store(new FileOutputStream("config/config.properties"), null);
         } catch (FileNotFoundException ex) {
             System.getLogger(Konfiguracija.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
