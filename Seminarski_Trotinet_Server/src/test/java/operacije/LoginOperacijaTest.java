@@ -47,4 +47,19 @@ public class LoginOperacijaTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(new Klijent()));
         assertEquals("Sistem nije mogao da pronadje zaposlenog", e.getMessage());
     }
+    
+    @Test
+    void testUspesnaPrijava() throws Exception {
+        new operacije.zaposleni.DodajZaposlenogSO().izvrsi(new Zaposleni(1, "test", "test1234", "TestIme", "TestPrezime"), null);
+
+        Zaposleni zahtev = new Zaposleni();
+        zahtev.setKorisnickoIme("test");
+        zahtev.setSifra("test1234");
+        operacija.izvrsi(zahtev, null);
+
+        assertNotNull(operacija.getZaposleni());
+        assertEquals("TestIme", operacija.getZaposleni().getIme());
+
+        new operacije.zaposleni.ObrisiZaposlenogSO().izvrsi(operacija.getZaposleni(), null);
+    }
 }

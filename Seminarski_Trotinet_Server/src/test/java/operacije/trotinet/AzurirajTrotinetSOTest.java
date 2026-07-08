@@ -54,4 +54,39 @@ public class AzurirajTrotinetSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(trotinet));
         assertEquals("Model mora imati najmanje 2 karaktera", e.getMessage());
     }
+    
+    void testAzurirajTrotinet() throws Exception {
+        
+        new DodajTrotinetSO().izvrsi(new Trotinet(1, "TestTrotinet", 15), null);
+        UcitajTrotineteSO ucitaj = new UcitajTrotineteSO();
+        ucitaj.izvrsi(null, null);
+        Trotinet uBazi = null;
+        
+        for (Trotinet t : ucitaj.getTrotineti()) {
+            if ("TestTrotinet".equals(t.getModelTrotineta())) {
+                uBazi = t;
+            }
+        }
+        assertNotNull(uBazi);
+
+        uBazi.setModelTrotineta("Izmenjeno");
+        uBazi.setCenaPoMinutu(13);
+        operacija.izvrsi(uBazi, null);
+
+        UcitajTrotineteSO ucitaj2 = new UcitajTrotineteSO();
+        ucitaj2.izvrsi(null, null);
+        Trotinet izmenjeno = null;
+        
+        for (Trotinet t : ucitaj2.getTrotineti()) {
+            if (t.getId() == uBazi.getId()) {
+                izmenjeno = t;
+            }
+        }
+
+        assertNotNull(izmenjeno);
+        assertEquals("Izmenjeno", izmenjeno.getModelTrotineta());
+        assertEquals(13, izmenjeno.getCenaPoMinutu(), 0.001);
+
+        new ObrisiTrotinetSO().izvrsi(izmenjeno, null);
+    }
 }

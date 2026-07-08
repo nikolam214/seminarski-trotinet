@@ -48,4 +48,25 @@ public class DodajTerminDezurstvaSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(new Klijent()));
         assertEquals("Sistem nije mogao da doda termin dezurstva", e.getMessage());
     }
+    
+    @Test
+    void testDodajTermin() throws Exception {
+        
+        operacija.izvrsi(new TerminDezurstva(1, "test", new Date(), 8), null);
+
+        UcitajTermineDezurstvaSO ucitaj = new UcitajTermineDezurstvaSO();
+        ucitaj.izvrsi(null, null);
+        TerminDezurstva uBazi = null;
+        
+        for (TerminDezurstva t : ucitaj.getTermini()) {
+            if ("test".equals(t.getTipSmene())) {
+                uBazi = t;
+            }
+        }
+
+        assertNotNull(uBazi);
+        assertEquals(8, uBazi.getTrajanje());
+
+        new ObrisiTerminDezurstvaSO().izvrsi(uBazi, null);
+    }
 }

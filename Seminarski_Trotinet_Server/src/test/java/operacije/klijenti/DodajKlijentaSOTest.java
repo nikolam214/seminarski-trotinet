@@ -62,4 +62,40 @@ public class DodajKlijentaSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(klijent));
         assertEquals("Prezime mora imati najmanje 2 karaktera", e.getMessage());
     }
+    
+    @Test
+    void testDodajeKlijenta() throws Exception {
+        
+        new operacije.mesto.DodajMestoSO().izvrsi(new Mesto(1, "TestMesto", 99999), null);
+        
+        operacije.mesto.UcitajMestoSO um = new operacije.mesto.UcitajMestoSO();
+        um.izvrsi(null, null);
+        Mesto mesto = null;
+        
+        for (Mesto m : um.getMesta()) {
+            if ("TestMesto".equals(m.getNaziv())) {
+                mesto = m;
+            }
+        }
+        assertNotNull(mesto);
+
+        operacija.izvrsi(new Klijent(1, "TestIme", "TestPrezime", 123456789, mesto), null);
+
+        UcitajKlijenteSO uk = new UcitajKlijenteSO();
+        uk.izvrsi(null, null);
+        Klijent uBazi = null;
+        
+        
+        for (Klijent k : uk.getKlijenti()) {
+            if ("TestIme".equals(k.getIme()) && "TestPrezime".equals(k.getPrezime())) {
+                uBazi = k;
+            }
+        }
+
+        assertNotNull(uBazi);
+        assertEquals(123456789, uBazi.getBrojtelefona());
+
+        new ObrisiKlijentaSO().izvrsi(uBazi, null);
+        new operacije.mesto.ObrisiMestoSO().izvrsi(mesto, null);
+    }
 }

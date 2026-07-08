@@ -6,6 +6,7 @@ package operacije.termindezurstva;
 
 import domen.Klijent;
 import domen.TerminDezurstva;
+import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,5 +44,34 @@ public class ObrisiTerminDezurstvaSOTest {
     void testPreduslovPogresnaKlasa() {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(new Klijent()));
         assertEquals("Sistem nije mogao da obrise termin dezurstva", e.getMessage());
+    }
+    
+    @Test
+    void testObrisiTermin() throws Exception {
+        
+        new DodajTerminDezurstvaSO().izvrsi(new TerminDezurstva(1, "test", new Date(), 8), null);
+        UcitajTermineDezurstvaSO ucitaj = new UcitajTermineDezurstvaSO();
+        ucitaj.izvrsi(null, null);
+        TerminDezurstva uBazi = null;
+        
+        for (TerminDezurstva t : ucitaj.getTermini()) {
+            if ("test".equals(t.getTipSmene())) {
+                uBazi = t;
+            }
+        }
+        assertNotNull(uBazi);
+
+        operacija.izvrsi(uBazi, null);
+
+        UcitajTermineDezurstvaSO ucitaj2 = new UcitajTermineDezurstvaSO();
+        ucitaj2.izvrsi(null, null);
+        boolean postoji = false;
+        
+        for (TerminDezurstva t : ucitaj2.getTermini()) {
+            if (t.getId() == uBazi.getId()) {
+                postoji = true;
+            }
+        }
+        assertFalse(postoji);
     }
 }

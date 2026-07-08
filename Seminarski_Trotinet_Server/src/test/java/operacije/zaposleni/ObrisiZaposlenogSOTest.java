@@ -45,4 +45,32 @@ public class ObrisiZaposlenogSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(new Klijent()));
         assertEquals("Sistem nije mogao da obrise zaposlenog", e.getMessage());
     }
+    
+    @Test
+    void testObrisiZaposlenog() throws Exception {
+        
+        new DodajZaposlenogSO().izvrsi(new Zaposleni(1, "test", "test1234", "TestIme", "TestPrezime"), null);
+        
+        UcitajZaposleneSO ucitaj = new UcitajZaposleneSO();
+        ucitaj.izvrsi(null, null);
+        Zaposleni uBazi = null;
+        for (Zaposleni z : ucitaj.getZaposleni()) {
+            if ("test".equals(z.getKorisnickoIme())) {
+                uBazi = z;
+            }
+        }
+        assertNotNull(uBazi);
+
+        operacija.izvrsi(uBazi, null);
+
+        UcitajZaposleneSO ucitaj2 = new UcitajZaposleneSO();
+        ucitaj2.izvrsi(null, null);
+        boolean postoji = false;
+        for (Zaposleni z : ucitaj2.getZaposleni()) {
+            if (z.getId() == uBazi.getId()) {
+                postoji = true;
+            }
+        }
+        assertFalse(postoji);
+    }
 }

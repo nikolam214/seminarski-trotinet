@@ -30,4 +30,9 @@ public class UcitajIznajmljivanjeSOTest {
     void testPreduslovNemaOgranicenja() {
         assertDoesNotThrow(() -> operacija.preduslovi(null));
     }
+    
+    void testUctajIznajmljivanje() throws Exception {
+        operacija.izvrsi(null, null);
+        assertNotNull(operacija.getIznajmljivanja());
+    }
 }

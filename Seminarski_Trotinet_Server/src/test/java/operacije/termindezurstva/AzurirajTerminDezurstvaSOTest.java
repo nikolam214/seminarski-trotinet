@@ -48,4 +48,39 @@ public class AzurirajTerminDezurstvaSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(new Klijent()));
         assertEquals("Sistem nije mogao da azurira termin dezurstva", e.getMessage());
     }
+    
+    @Test
+    void testIzmenaTermin() throws Exception {
+        
+        new DodajTerminDezurstvaSO().izvrsi(new TerminDezurstva(1, "test", new Date(), 8), null);
+        UcitajTermineDezurstvaSO ucitaj = new UcitajTermineDezurstvaSO();
+        ucitaj.izvrsi(null, null);
+        TerminDezurstva uBazi = null;
+        
+        for (TerminDezurstva t : ucitaj.getTermini()) {
+            if ("test".equals(t.getTipSmene())) {
+                uBazi = t;
+            }
+        }
+        assertNotNull(uBazi);
+
+        uBazi.setTipSmene("izmenjen");
+        uBazi.setTrajanje(12);
+        operacija.izvrsi(uBazi, null);
+
+        UcitajTermineDezurstvaSO ucitaj2 = new UcitajTermineDezurstvaSO();
+        ucitaj2.izvrsi(null, null);
+        TerminDezurstva izmenjen = null;
+        for (TerminDezurstva t : ucitaj2.getTermini()) {
+            if (t.getId() == uBazi.getId()) {
+                izmenjen = t;
+            }
+        }
+
+        assertNotNull(izmenjen);
+        assertEquals("izmenjen", izmenjen.getTipSmene());
+        assertEquals(12, izmenjen.getTrajanje());
+
+        new ObrisiTerminDezurstvaSO().izvrsi(izmenjen, null);
+    }
 }

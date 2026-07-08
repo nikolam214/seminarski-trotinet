@@ -45,4 +45,32 @@ public class ObrisiTrotinetSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(new Klijent()));
         assertEquals("Sistem nije mogao da obrise trotinet", e.getMessage());
     }
+    
+    @Test
+    void testObriseTrotinet() throws Exception {
+        
+        new DodajTrotinetSO().izvrsi(new Trotinet(1, "TestTrotinet", 15.), null);
+        UcitajTrotineteSO ucitaj = new UcitajTrotineteSO();
+        ucitaj.izvrsi(null, null);
+        Trotinet uBazi = null;
+        
+        for (Trotinet t : ucitaj.getTrotineti()) {
+            if ("TestTrotinet".equals(t.getModelTrotineta())) {
+                uBazi = t;
+            }
+        }
+        assertNotNull(uBazi);
+
+        operacija.izvrsi(uBazi, null);
+
+        UcitajTrotineteSO ucitaj2 = new UcitajTrotineteSO();
+        ucitaj2.izvrsi(null, null);
+        boolean postoji = false;
+        for (Trotinet t : ucitaj2.getTrotineti()) {
+            if (t.getId() == uBazi.getId()) {
+                postoji = true;
+            }
+        }
+        assertFalse(postoji);
+    }
 }

@@ -32,4 +32,10 @@ public class UcitajZtdSOTest {
         assertDoesNotThrow(() -> operacija.preduslovi(null));
     }
     
+    void testUcitajZtD() throws Exception {
+        
+        operacija.izvrsi(null, null);
+        assertNotNull(operacija.getZtDList());
+    }
+    
 }

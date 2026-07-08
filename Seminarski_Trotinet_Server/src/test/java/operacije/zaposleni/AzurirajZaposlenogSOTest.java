@@ -61,4 +61,42 @@ public class AzurirajZaposlenogSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(zaposleni));
         assertEquals("Sifra mora imati najmanje 4 karaktera", e.getMessage());
     }
+    
+    @Test
+    void testIzmenaZaposlenog() throws Exception {
+        
+        new DodajZaposlenogSO().izvrsi(new Zaposleni(1, "test", "test1234", "TestIme", "TestPrezime"), null);
+        UcitajZaposleneSO ucitaj = new UcitajZaposleneSO();
+        ucitaj.izvrsi(null, null);
+        Zaposleni uBazi = null;
+        
+        for (Zaposleni z : ucitaj.getZaposleni()) {
+            if ("test".equals(z.getKorisnickoIme())) {
+                uBazi = z;
+            }
+        }
+        assertNotNull(uBazi);
+
+        uBazi.setIme("IzmenjenoIme");
+        uBazi.setPrezime("IzmenjenoPrezime");
+        uBazi.setSifra("novaSifra1");
+        operacija.izvrsi(uBazi, null);
+
+        UcitajZaposleneSO ucitaj2 = new UcitajZaposleneSO();
+        ucitaj2.izvrsi(null, null);
+        Zaposleni izmenjen = null;
+        
+        for (Zaposleni z : ucitaj2.getZaposleni()) {
+            if (z.getId() == uBazi.getId()) {
+                izmenjen = z;
+            }
+        }
+
+        assertNotNull(izmenjen);
+        assertEquals("IzmenjenoIme", izmenjen.getIme());
+        assertEquals("IzmenjenoPrezime", izmenjen.getPrezime());
+        assertEquals("novaSifra1", izmenjen.getSifra());
+
+        new ObrisiZaposlenogSO().izvrsi(izmenjen, null);
+    }
 }

@@ -31,4 +31,10 @@ public class UcitajZaposleneSOTest {
     void testPreduslovNemaOgranicenja() {
         assertDoesNotThrow(() -> operacija.preduslovi(null));
     }
+    
+    @Test
+    void testUcitajZaposlene() throws Exception {
+        operacija.izvrsi(null, null);
+        assertNotNull(operacija.getZaposleni());
+    }
 }

@@ -31,4 +31,11 @@ public class UcitajTrotineteSOTest {
     void testPreduslovNemaOgranicenja() {
         assertDoesNotThrow(() -> operacija.preduslovi(null));
     }
+    
+    @Test
+    void testUcitajTrotinete() throws Exception {
+        
+        operacija.izvrsi(null, null);
+        assertNotNull(operacija.getTrotineti());
+    }
 }

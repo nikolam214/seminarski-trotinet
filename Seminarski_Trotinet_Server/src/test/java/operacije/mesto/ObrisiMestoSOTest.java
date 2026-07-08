@@ -44,4 +44,32 @@ public class ObrisiMestoSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(new Klijent()));
         assertEquals("Sistem nije mogao da obrise mesto", e.getMessage());
     }
+    
+    @Test
+    void testObrisiMesto() throws Exception {
+        
+        new DodajMestoSO().izvrsi(new Mesto(1, "TestMesto", 99999), null);
+        UcitajMestoSO ucitaj = new UcitajMestoSO();
+        ucitaj.izvrsi(null, null);
+        Mesto uBazi = null;
+        
+        for (Mesto m : ucitaj.getMesta()) {
+            if ("TestMesto".equals(m.getNaziv())) {
+                uBazi = m;
+            }
+        }
+        assertNotNull(uBazi);
+
+        operacija.izvrsi(uBazi, null);
+
+        UcitajMestoSO ucitaj2 = new UcitajMestoSO();
+        ucitaj2.izvrsi(null, null);
+        boolean postoji = false;
+        for (Mesto m : ucitaj2.getMesta()) {
+            if (m.getId() == uBazi.getId()) {
+                postoji = true;
+            }
+        }
+        assertFalse(postoji);
+    }
 }

@@ -31,4 +31,11 @@ public class UcitajMestoSOTest {
     void testPreduslovNemaOgranicenja() {
         assertDoesNotThrow(() -> operacija.preduslovi(null));
     }
+    
+    @Test
+    void testUcitajMesta() throws Exception {
+        
+        operacija.izvrsi(null, null);
+        assertNotNull(operacija.getMesta());
+    }
 }

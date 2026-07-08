@@ -69,4 +69,26 @@ public class DodajZaposlenogSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(zaposleni));
         assertEquals("Sifra mora imati najmanje 4 karaktera", e.getMessage());
     }
+    
+    @Test
+    void testDodajZaposlenog() throws Exception {
+        
+        operacija.izvrsi(new Zaposleni(1, "test", "test1234", "TestIme", "TestPrezime"), null);
+
+        UcitajZaposleneSO ucitaj = new UcitajZaposleneSO();
+        ucitaj.izvrsi(null, null);
+        Zaposleni uBazi = null;
+        
+        for (Zaposleni z : ucitaj.getZaposleni()) {
+            if ("test".equals(z.getKorisnickoIme())) {
+                uBazi = z;
+            }
+        }
+
+        assertNotNull(uBazi);
+        assertEquals("TestIme", uBazi.getIme());
+        assertEquals("TestPrezime", uBazi.getPrezime());
+
+        new ObrisiZaposlenogSO().izvrsi(uBazi, null);
+    }
 }

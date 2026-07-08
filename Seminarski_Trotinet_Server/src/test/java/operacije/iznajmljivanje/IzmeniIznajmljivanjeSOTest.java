@@ -70,4 +70,67 @@ public class IzmeniIznajmljivanjeSOTest {
         Exception e = assertThrows(Exception.class, () -> operacija.preduslovi(iznajmljivanje));
         assertEquals("Iznajmljivanje mora imati najmanje jednu stavku", e.getMessage());
     }
+    
+    @Test
+    void testIzmenaIznajmljivanje() throws Exception {
+        
+        new operacije.mesto.DodajMestoSO().izvrsi(new Mesto(1, "TestMesto", 99999), null);
+        operacije.mesto.UcitajMestoSO um = new operacije.mesto.UcitajMestoSO();
+        um.izvrsi(null, null);
+        Mesto mesto = null;
+        
+        for (Mesto m : um.getMesta()) if ("TestMesto".equals(m.getNaziv())) mesto = m;
+
+        new operacije.klijenti.DodajKlijentaSO().izvrsi(new Klijent(1, "TestIme", "TestPrezime", 123456789, mesto), null);
+        operacije.klijenti.UcitajKlijenteSO uk = new operacije.klijenti.UcitajKlijenteSO();
+        uk.izvrsi(null, null);
+        Klijent klijent = null;
+        for (Klijent k : uk.getKlijenti()) if ("TestIme".equals(k.getIme())) klijent = k;
+
+        new operacije.zaposleni.DodajZaposlenogSO().izvrsi(new Zaposleni(1, "test", "test1234", "TestIme", "TestPrezime"), null);
+        operacije.zaposleni.UcitajZaposleneSO uz = new operacije.zaposleni.UcitajZaposleneSO();
+        uz.izvrsi(null, null);
+        Zaposleni zaposleni = null;
+        
+        for (Zaposleni z : uz.getZaposleni()) if ("test".equals(z.getKorisnickoIme())) zaposleni = z;
+
+        new operacije.trotinet.DodajTrotinetSO().izvrsi(new Trotinet(1, "TestTrotinet", 15), null);
+        operacije.trotinet.UcitajTrotineteSO ut = new operacije.trotinet.UcitajTrotineteSO();
+        ut.izvrsi(null, null);
+        Trotinet trotinet = null;
+        
+        for (Trotinet t : ut.getTrotineti()) if ("TestTrotinet".equals(t.getModelTrotineta())) trotinet = t;
+
+        Iznajmljivanje novo = new Iznajmljivanje(1, 465.0, zaposleni, klijent);
+        Calendar cal = Calendar.getInstance();
+        Date ranije = cal.getTime();
+        cal.add(Calendar.MINUTE, 30);
+        StavkaIznajmljivanja stavka = new StavkaIznajmljivanja(1, novo, ranije, cal.getTime(), 15, 465.0, trotinet);
+        novo.getStavkeIznajmljivanja().add(stavka);
+        new KreirajIznajmljivanjeSO().izvrsi(novo, null);
+
+        novo.setUkupnaCena(999.0);
+        stavka.setIznos(999.0);
+        operacija.izvrsi(novo, null);
+
+        UcitajIznajmljivanjaSO ui = new UcitajIznajmljivanjaSO();
+        ui.izvrsi(null, null);
+        Iznajmljivanje uBazi = null;
+        
+        for (Iznajmljivanje i : ui.getIznajmljivanja()) if (i.getId() == novo.getId()) uBazi = i;
+
+        assertNotNull(uBazi);
+        assertEquals(999.0, uBazi.getUkupnaCena(), 0.001);
+        assertEquals(999.0, uBazi.getStavkeIznajmljivanja().get(0).getIznos(), 0.001);
+
+        repository.db.impl.DbRepositoryGeneric broker = new repository.db.impl.DbRepositoryGeneric();
+        broker.connect();
+        broker.delete(stavka);
+        broker.delete(novo);
+        broker.commit();
+        new operacije.klijenti.ObrisiKlijentaSO().izvrsi(klijent, null);
+        new operacije.zaposleni.ObrisiZaposlenogSO().izvrsi(zaposleni, null);
+        new operacije.trotinet.ObrisiTrotinetSO().izvrsi(trotinet, null);
+        new operacije.mesto.ObrisiMestoSO().izvrsi(mesto, null);
+    }
 }

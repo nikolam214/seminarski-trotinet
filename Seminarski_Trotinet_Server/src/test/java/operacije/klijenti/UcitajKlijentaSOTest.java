@@ -31,4 +31,10 @@ public class UcitajKlijentaSOTest {
     void testPreduslovNemaOgranicenja() {
         assertDoesNotThrow(() -> operacija.preduslovi(null));
     }
+    
+    void testUcitajKlijenta() throws Exception {
+        
+        operacija.izvrsi(null, null);
+        assertNotNull(operacija.getKlijenti());
+    }
 }

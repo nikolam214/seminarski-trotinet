@@ -30,4 +30,11 @@ public class UcitajTerminDezurstvaSOTest {
     void testPreduslovNemaOgranicenja() {
         assertDoesNotThrow(() -> operacija.preduslovi(null));
     }
+    
+    @Test
+    void testUcitajTermine() throws Exception {
+        
+        operacija.izvrsi(null, null);
+        assertNotNull(operacija.getTermini());
+    }
 }
