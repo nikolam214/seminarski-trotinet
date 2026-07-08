@@ -64,6 +64,12 @@ public class UcitajIznajmljivanjaSO extends ApstraktnaGenerickaOperacija {
                 e.printStackTrace();
             }
         }
+        try {
+            new json.JsonPerzistencija().sacuvajIznajmljivanja(iznajmljivanja, "iznajmljivanja.json");
+            System.out.println("Iznajmljivanja sacuvana u iznajmljivanja.json");
+        } catch (Exception e) {
+            System.out.println("Greska pri cuvanju u JSON: " + e.getMessage());
+        }
     }
     
     public List<Iznajmljivanje> getIznajmljivanja() {
